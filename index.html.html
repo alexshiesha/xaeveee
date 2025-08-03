@@ -1,0 +1,402 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Special Gift</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Pixelify Sans', sans-serif;
+      background: #ffe6f0;
+      background-image: url('https://www.freeiconspng.com/uploads/pink-heart-png-12.png'), url('chibi.png');
+      background-repeat: repeat, no-repeat;
+      background-position: top left, bottom right;
+      background-size: 100px, 120px;
+    }
+    .container {
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      max-width: 400px;
+      margin: 80px auto;
+      text-align: center;
+    }
+    h2 {
+      font-family: 'Pixelify Sans', cursive;
+      font-size: 32px;
+      color: #ff5c8d;
+    }
+    #cards-section {
+      display: none;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+    .card {
+      width: 200px;
+      height: 150px;
+      background: #fff0f5;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(255,105,180,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-family: 'Pixelify Sans', cursive;
+      color: #d63384;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .numberpad {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .numberpad button {
+      padding: 15px;
+      font-size: 20px;
+      border-radius: 12px;
+      border: none;
+      background: #ffc6d1;
+      color: #b1004e;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-family: 'Pixelify Sans', cursive;
+    }
+    .numberpad button:hover {
+      background: #ff94b6;
+    }
+    #passcode-display {
+      font-size: 30px;
+      font-weight: bold;
+      letter-spacing: 10px;
+      background: white;
+      padding: 12px 20px;
+      border-radius: 14px;
+      width: 200px;
+      margin: 0 auto 10px;
+      color: #ff69b4;
+    }
+    #error-message {
+      color: red;
+      margin-top: 10px;
+      font-weight: bold;
+      display: none;
+    }
+  
+@keyframes fadeIn {
+  to { opacity: 1; transform: none; }
+}
+h2 {
+  transform: translateY(20px);
+  transition: all 1s ease;
+}
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+h2 {
+  transform: translateY(20px);
+  transition: all 1s ease;
+}
+
+#viewme-popup p {
+  color: #4a004e;
+  line-height: 1.6;
+  font-size: 18px;
+  font-family: 'Pixelify Sans', sans-serif;
+}
+
+#viewme-popup h2 {
+  color: #d63384;
+  font-weight: bold;
+  opacity: 0;
+  animation: fadeIn 2s forwards 1s;
+}
+
+#viewme-popup img {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+#viewme-popup button {
+  padding: 10px 20px;
+  font-size: 18px;
+  background: #ffc6d1;
+  border: none;
+  border-radius: 10px;
+  color: #b1004e;
+  cursor: pointer;
+  font-family: 'Pixelify Sans', cursive;
+  box-shadow: 0 4px 10px rgba(255,105,180,0.3);
+  transition: background 0.3s;
+}
+
+#viewme-popup button:hover {
+  background: #ff94b6;
+}
+
+
+</style>
+</head>
+<body>
+  <div class="container">
+    <div id="passcode-section">
+      <h2>💖 Enter Your Secret Code 💖</h2>
+      <div id="passcode-display">----</div>
+      <div class="numberpad">
+        <button onclick="appendDigit('1')">1</button>
+        <button onclick="appendDigit('2')">2</button>
+        <button onclick="appendDigit('3')">3</button>
+        <button onclick="appendDigit('4')">4</button>
+        <button onclick="appendDigit('5')">5</button>
+        <button onclick="appendDigit('6')">6</button>
+        <button onclick="appendDigit('7')">7</button>
+        <button onclick="appendDigit('8')">8</button>
+        <button onclick="appendDigit('9')">9</button>
+        <button onclick="clearPasscode()">←</button>
+        <button onclick="appendDigit('0')">0</button>
+        <button onclick="submitPasscode()">OK</button>
+      </div>
+      <div id="error-message">❌ Incorrect passcode! Try again.</div>
+    </div>
+
+    <div id="cards-section">
+      <div class="card" onclick="showMemories()">📸 Our Memories</div>
+      <div class="card" onclick="showCountdown()">⏳ Countdown</div>
+      <div class="card" onclick="startChallenge()">🎁 Can you do this challenge?</div>
+      <div class="card" onclick="showViewme()">🎵 View me!</div>
+    </div>
+  </div>
+
+  <!-- Overlays -->
+  <div id="memories-popup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#ffe6f0e6; text-align:center; z-index:10;">
+    <video src="memories.mp4" controls style="width:80%; max-width:500px;"></video>
+    <br><br>
+    <button onclick="closeMemories()">Done</button>
+  </div>
+
+  <div id="countdown-popup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff0f8; text-align:center; z-index:10;">
+    <h2 style="margin-top:40px;">⏳ Time Since August 3, 2020, Your first birthday with me</h2>
+    <div id="countdown" style="font-size:35px; margin-top:20px;"></div>
+    <br>
+    <button onclick="closeCountdown()">Done</button>
+  </div>
+  <audio id="puzzleMusic" src="puzzlegame.mp3" loop autoplay></audio>
+  <audio id="yeheySound" src="yehey.mp3"></audio>
+    <audio id="revealSound" src="surprise.mp3"></audio>
+
+  <div id="challenge-popup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fffbe9; text-align:center; z-index:10;">
+    <h2 style="margin-top:30px;">🧩 Solve this challenge!</h2>
+    <iframe src="https://www.jigsawplanet.com/?rc=play&amp;pid=1765dd6dc4e4&amp;view=iframe" style="width:100%;height:600px" frameborder="0" allowfullscreen></iframe>
+    <button onclick="showGifts()">I Solved It!</button>
+  </div>
+
+  <div id="gifts-popup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff0f5; text-align:center; z-index:11;">
+    <h2>🎁 Choose Your Gift</h2>
+    <div style="display:flex; justify-content:center; gap:20px; margin-top:20px;">
+      <img src="giftbox.png" style="width:200px; cursor:pointer;" onclick="revealGift(1)">
+      <img src="giftbox.png" style="width:200px; cursor:pointer;" onclick="revealGift(2)">
+      <img src="giftbox.png" style="width:200px; cursor:pointer;" onclick="revealGift(3)">
+    </div>
+    <div id="gift-reveal" style="margin-top:30px;"></div>
+    <br>
+    <button onclick="closeGifts()">Done</button>
+  </div>
+
+  <div id="viewme-popup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff0f5; overflow-y: scroll; z-index:10;">
+  <audio id="bgMusic" src="youruniverse.mp3" autoplay loop></audio>
+
+  <div style="height: 100vh; display: flex; justify-content: center; align-items: center; background-color: #fff0f5;">
+  <iframe 
+    src="https://drive.google.com/file/d/15bHbg4-o0iIq1o1QggDAqCf78_NUd_Qz/preview" 
+    width="1000" 
+    height="563" 
+    allow="autoplay" 
+    allowfullscreen 
+    style="border: none; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+  </iframe>
+</div>
+
+
+    <!-- Message after video -->
+    <h2 style="text-align:center; margin-top:70px; font-size:35px; opacity:0; animation: fadeIn 3s forwards 1s;">
+      You can thank the stars all you want, but I'll always be the lucky one.
+    </h2>
+
+    <!-- Section 1 -->
+    <div style="display: flex; align-items: center; margin: 60px 0;">
+      <img src="start.jpg" style="width:40%; border-radius:15px; margin-right:20px;">
+      <p style="font-size:20px;">This is our first meet. It’s a quiet reminder that I spent almost half of my junior high years growing up with you by my side.</p>
+    </div>
+
+    <!-- Section 2 -->
+    <div style="display: flex; align-items: center; flex-direction: row-reverse; margin: 60px 0;">
+      <img src="jhs.jpg" style="width:40%; border-radius:15px; margin-left:20px;">
+      <p style="font-size:20px;">I ended junior high with you still by my side.</p>
+    </div>
+
+    <!-- Section 3 -->
+    <div style="display: flex; align-items: center; margin: 60px 0;">
+      <img src="shsjourney.jpg" style="width:40%; border-radius:15px; margin-right:20px;">
+      <p style="font-size:20px;">Then, starting my senior high school journey with you.</p>
+    </div>
+
+    <!-- Section 4 -->
+    <div style="display: flex; align-items: center; flex-direction: row-reverse; margin: 60px 0;">
+      <img src="shs.jpg" style="width:40%; border-radius:15px; margin-left:20px;">
+      <p style="font-size:20px;">And as senior high ends, I’m grateful it ends with you beside me.</p>
+    </div>
+
+    <!-- Section 5 -->
+    <div style="text-align:center; margin:60px 0;">
+      <img src="birthday.jpg" style="width:60%; border-radius:20px;"><br>
+      <p style="font-size:20px; margin-top:20px;">…and soon after, I spent my 18th birthday with you—just like I always hoped I would.</p>
+      <p style="font-size:22px; font-weight: bold;">In every chapter that counted, you were there—and all I’m hoping for is that you always will be.</p>
+    </div>
+
+    <!-- Chibi image -->
+    <div style="text-align:center; margin:60px 0;">
+      <img src="chibi1.png" style="width:150px;">
+    </div>
+
+    <!-- Final message card -->
+    <div style="background:url('https://www.transparenttextures.com/patterns/hearts.png'); background-color:#fff0f5; padding:40px; border-radius:20px; margin: 60px auto; max-width: 600px;">
+      <p style="font-size:18px;">Happy, happy birthday, baby kooo! 🥰 20 ka na omggg!! Samantalang naging mag-MU tayo, mga 14 years old ka pa lang huhu 🥹
+
+I wish you good health, success, and safety always. Sana matupad mo lahat ng goals mo, and ma-achieve mo lahat ng gusto mong makuha. Basta always remember—lagi kitang sasamahan. ❤️
+
+Alam kong madalas tayong nag-aaway lately, pero that doesn’t mean I don’t love you anymore. You will always be special to me. I'm really sorry sa mga ugali ko—wala na akong excuse dun, and I know nakaka-drain kapag yung partner ay laging may tampo or galit. Sorry talaga, bby. 😔
+
+Also, sorry rin kung parang paulit-ulit na lang ang mga binibigay at ginagawa ko sa’yo tuwing special days. LDR is hard talaga, hays. Pero makakabawi rin ako soooon—let’s hope and pray for that! 🙏
+
+Ayun, HAPPY BIRTHDAAAAAY ULIT, BBYYYYY!!! I LOOOOVEEE YOU AND I MISS YOUUUUUU!!! 😘🥳</p>
+    </div>
+
+    <div style="text-align:center;"><button onclick="closeViewme()" style="margin-bottom:30px;">Done</button></div>
+  </div>
+</div>
+
+  <script>
+    let input = "";
+
+    function appendDigit(d) {
+      if (input.length < 4) {
+        input += d;
+        updateDisplay();
+      }
+    }
+
+    function clearPasscode() {
+      input = input.slice(0, -1);
+      updateDisplay();
+      document.getElementById("error-message").style.display = "none";
+    }
+
+    function updateDisplay() {
+      const display = input.padEnd(4, "-");
+      document.getElementById("passcode-display").innerText = display;
+    }
+
+    function submitPasscode() {
+      if (input === "0803") {
+        document.getElementById("passcode-section").style.display = "none";
+        document.getElementById("cards-section").style.display = "flex";
+      } else {
+        document.getElementById("error-message").style.display = "block";
+        input = "";
+        updateDisplay();
+      }
+    }
+
+    function showMemories() {
+      document.getElementById('memories-popup').style.display = 'block';
+    }
+    function closeMemories() {
+      document.getElementById('memories-popup').style.display = 'none';
+    }
+
+    function showCountdown() {
+      document.getElementById("countdown-popup").style.display = "block";
+      const start = new Date("2020-08-03T00:00:00");
+      const now = new Date();
+      const diff = now - start;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const years = Math.floor(days / 365);
+      const months = Math.floor((days % 365) / 30);
+      const leftoverDays = days - (years * 365) - (months * 30);
+      document.getElementById("countdown").innerText =
+        `${years} years, ${months} months, and ${leftoverDays} days 💖`;
+    }
+
+    function closeCountdown() {
+      document.getElementById("countdown-popup").style.display = "none";
+    }
+
+    function startChallenge() {
+      document.getElementById('challenge-popup').style.display = 'block';
+      document.getElementById('puzzleMusic').play();
+    }
+
+    function showGifts() {
+      document.getElementById('challenge-popup').style.display = 'none';
+      document.getElementById('gifts-popup').style.display = 'block';
+      const puzzleMusic = document.getElementById('puzzleMusic');
+      puzzleMusic.pause();
+      puzzleMusic.currentTime = 0;
+      const yehey = document.getElementById('yeheySound');
+      yehey.play();
+      yehey.onended = function () {
+        document.getElementById('giftMusic').play();
+      };
+    }
+
+    function revealGift(num) {
+      const messages = {
+        1: "🛵 Surprise! You won a food delivery voucher, just tell me what you're craving🍽",
+        2: "💌 Surprise! You won a cuddle & movie night! 👩‍❤️‍💋‍👨",
+        3: "🤩 Surprise! You won a shopping voucher worth 1k!🎟 "
+      };
+      document.getElementById('revealSound').play();
+      document.getElementById("gift-reveal").innerHTML =
+        `<p style="font-size:50px; color:#d63384;">${messages[num]}</p>`;
+    }
+
+    function closeGifts() {
+      document.getElementById('gifts-popup').style.display = 'none';
+      const giftMusic = document.getElementById('giftMusic');
+      giftMusic.pause();
+      giftMusic.currentTime = 0;
+    }
+
+    function showViewme() {
+  document.getElementById("viewme-popup").style.display = "block";
+  setTimeout(() => {
+    document.getElementById("bgMusic").play();
+  }, 6000);
+}
+
+function closeViewme() {
+  document.getElementById("viewme-popup").style.display = "none";
+  document.getElementById("bgMusic").pause();
+  document.getElementById("bgMusic").currentTime = 0;
+    }
+
+    updateDisplay();
+  </script>
+</body>
+</html>
